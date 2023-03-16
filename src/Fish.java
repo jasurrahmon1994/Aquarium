@@ -1,7 +1,7 @@
 public class Fish implements Runnable {
 
-    private int lifeSpan = 0;
-    private String fishName = "";
+    private int lifeSpan;
+    private String fishName;
     private Location location;
 
     private Gender gender;
@@ -99,7 +99,10 @@ public class Fish implements Runnable {
         }
 
     }
-
+    @Override
+    public String toString() {
+        return fishName + " : " + gender + " : " + location;
+    }
 
     public Location getLocation() {
         return location;
@@ -133,10 +136,7 @@ public class Fish implements Runnable {
         this.gender = gender;
     }
 
-    @Override
-    public String toString() {
-        return fishName + " : " + gender + " : " + location;
-    }
+
 
 
 }
