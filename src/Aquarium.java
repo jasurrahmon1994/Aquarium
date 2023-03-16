@@ -1,30 +1,29 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Aquarium {
 
-    static int size = 0;
-    static int number_of_fishes = 5;
-    static int number_of_moves = 0;
+    static int size;
+    static int number_of_fishes;
+    static int number_of_moves;
 
-    static LinkedList<Fish> fishList = new LinkedList<>();
+    static final LinkedList<Fish> fishList = new LinkedList<>();
+    static List<Fish> childFishList = new ArrayList<>();
 
+    static
+    {
+        size = (int) (Math.random() * 10) + 5;
+        number_of_fishes = (int) (Math.random() * Math.pow(size, 2));
+        number_of_moves = (int) (Math.random() * 5) + 5;
+    }
     public static void main(String[] args) {
 
-        Scanner scn = new Scanner(System.in);
-
-        System.out.println("Please enter the size of the aquarium :");
-
-        size = scn.nextInt();
-
-        while (number_of_fishes >= Math.pow(size, 2)) {
-            System.out.println("Please enter the correct number of fishes in the aquarium , MAx allowed fishes are 2 to the power size of Aquarium: ");
-            number_of_fishes = scn.nextInt();
-        }
-
-        System.out.println("Please enter the Number of Minimum Moves for each of the fishes :");
-
-        number_of_moves = scn.nextInt();
+        System.out.println("Initialized the following static variables: ");
+        System.out.println("Aquarium size: " + size);
+        System.out.println("The number of fishes in aquarium: " + number_of_fishes);
+        System.out.println("The lifespan of each fish is " + number_of_moves);
 
         Fish[] fishes = new Fish[number_of_fishes];
 
@@ -46,10 +45,15 @@ public class Aquarium {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Final Location list goes like : ");
+        System.out.println("Final Parent Fish Location list goes like : ");
 
         for (Fish fish : fishList) {
             System.out.println(fish.getFishName() + " is staying at " + fish.getLocation());
+        }
+        System.out.println("Child Fish Location list goes like : ");
+
+        for (Fish child : childFishList) {
+            System.out.println(child.getFishName() + " is staying at " + child.getLocation());
         }
     }
 }

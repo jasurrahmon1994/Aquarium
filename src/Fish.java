@@ -23,9 +23,9 @@ public class Fish implements Runnable {
     public void run() {
         for (int i = 0; i < lifeSpan; i++) {
             if (i == 0)
-                System.out.println(" Initial location of Fish and its gender " + fishName + ":" + gender.name() + " Location is " + this.getLocation().getX() + " , " + this.getLocation().getY());
+                System.out.println("Fish initialization: " + this);
 
-            this.setNextLocation(this.getLocation().getX(), this.getLocation().getY());
+            this.setNextLocation();
 
             System.out.println(" Move number is " + (i + 1) + ". New location of " + fishName + " is " + this.getLocation());
             try {
@@ -41,9 +41,7 @@ public class Fish implements Runnable {
         int location_exist_ind = 0;
 
         while (location_exist_ind == 0) {
-            Location loc = new Location();
-            loc.setX((int) (Math.random() * Size));
-            loc.setY((int) (Math.random() * Size));
+            Location loc = new Location((int) (Math.random() * Size), (int) (Math.random() * Size));
             this.setLocation(loc);
 
             location_exist_ind = checkLocation(this);
@@ -56,19 +54,18 @@ public class Fish implements Runnable {
 
             if (Aquarium.fishList.size() != 0)
                 for (Fish fish : Aquarium.fishList) {
-                    if (obj.getLocation().equals(fish.getLocation())) {
-                        System.out.println(fish + " and " + obj + " met at " + obj.getLocation());
-                        if(fish.getGender() != obj.getGender()){
-                            Fish child = new Fish();
-                            child.setFishName("Child of " + fish.getFishName());
-                            Location child_loc = new Location();
-                            child_loc.setX(Direction_X.getRandom_direction_X(fish.getLocation().getX()));
-                            child_loc.setY(Direction_Y.getRandom_direction_Y(fish.getLocation().getY()));
-                            child.setLocation(child_loc);
-                            child.setGender(Gender.getRandomGender((int) (fish.getLifeSpan() * Math.random())));
-                            Aquarium.fishList.add(child);
-                            System.out.println("Now they have child: " + child);
-                        }
+                    boolean locCheck = obj.getLocation().equals(fish.getLocation());
+                    boolean nameCheck = obj.getFishName().equals(fish.getFishName());
+                    boolean genderCheck = obj.getGender().equals(fish.getGender());
+                    if (locCheck && !nameCheck && !genderCheck) {
+                        Fish child = new Fish();
+                        child.setFishName("Child of " + fish.getFishName() + " and " + obj.getFishName());
+                        Location child_loc = new Location(Direction_X.getRandom_direction_X(fish.getLocation().getX()),
+                                Direction_Y.getRandom_direction_Y(fish.getLocation().getY()));
+                        child.setLocation(child_loc);
+                        child.setGender(Gender.getRandomGender((int) (fish.getLifeSpan() * Math.random())));
+                        Aquarium.childFishList.add(child);
+                        System.out.println("Now " + fish + " || " + obj + " have child: " + child);
                         temp_ind = 0;
                         try {
                             Thread.sleep(1000);
@@ -83,33 +80,26 @@ public class Fish implements Runnable {
         return temp_ind;
     }
 
-    public void setNextLocation(int x, int y) {
+    public void setNextLocation() {
 
         int X_location = 0;
         int Y_location = 0;
 
         int location_exist_ind = 0;
-        Location temp_loc = new Location();
 
         while (location_exist_ind == 0) {
 
-            X_location = Direction_X.getRandom_direction_X(x);
+            X_location = Direction_X.getRandom_direction_X(this.getLocation().getX());
 
-            Y_location = Direction_Y.getRandom_direction_Y(y);
-
-            Fish fish = new Fish();
-
-            temp_loc.setX(X_location);
-
-            temp_loc.setY(Y_location);
-            fish.setLocation(temp_loc);
-
-            location_exist_ind = checkLocation(fish);
+            Y_location = Direction_Y.getRandom_direction_Y(this.getLocation().getY());
+            Location tempLoc = new Location(X_location, Y_location);
+            this.setLocation(tempLoc);
+            location_exist_ind = checkLocation(this);
 
         }
-        this.setLocation(temp_loc);
 
     }
+
 
     public Location getLocation() {
         return location;
@@ -145,6 +135,8 @@ public class Fish implements Runnable {
 
     @Override
     public String toString() {
-        return fishName + " : " + gender;
+        return fishName + " : " + gender + " : " + location;
     }
+
+
 }
